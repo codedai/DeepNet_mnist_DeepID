@@ -9,16 +9,16 @@ import theano
 import theano.tensor as T
 
 
-# def deepID_test(learning_rate=0.12, n_epochs=200, dataset='mnist.pkl.gz', nkerns=[20, 40, 60, 80], batch_size=500,
-#                 acti_func=relu):
+def deepID_test(learning_rate=0.1, n_epochs=200, dataset='mnist.pkl.gz', nkerns=[20, 40, 60, 80], batch_size=500,
+                acti_func=relu):
 # def deepID_test(learning_rate=0.12, n_epochs=200, dataset='mnist.pkl.gz', nkerns=[10, 20, 30, 40], batch_size=500,
 #                 acti_func=relu):
 # def deepID_test(learning_rate=0.115, n_epochs=200, dataset='mnist.pkl.gz', nkerns=[30, 45, 60, 85], batch_size=500,
 #                 acti_func=relu):
 # def deepID_test(learning_rate=0.11, n_epochs=200, dataset='mnist.pkl.gz', nkerns=[10, 15, 20, 29], batch_size=500,
 #                 acti_func=relu):
-def deepID_test(learning_rate=0.11, n_epochs=200, dataset='mnist.pkl.gz', nkerns=[5, 10, 12, 20], batch_size=500,
-                acti_func=relu):
+# def deepID_test(learning_rate=0.11, n_epochs=200, dataset='mnist.pkl.gz', nkerns=[5, 10, 12, 20], batch_size=500,
+#                 acti_func=relu):
     src_channel = 1
     layer1_image_shape = (500, src_channel, 28, 28)
     layer1_filter_shape = (nkerns[0], src_channel, 5, 5)
@@ -76,28 +76,28 @@ def deepID_test(learning_rate=0.11, n_epochs=200, dataset='mnist.pkl.gz', nkerns
                                 image_shape=layer1_image_shape,
                                 filter_shape=layer1_filter_shape,
                                 poolsize=(2, 2),
-                                activation=acti_func)
+                                activation=T.tanh)
 
     layer2 = LeNetConvPoolLayer(rng,
                                 input=layer1.output,
                                 image_shape=layer2_image_shape,
                                 filter_shape=layer2_filter_shape,
                                 poolsize=(2, 2),
-                                activation=acti_func)
+                                activation=T.tanh)
 
     layer3 = LeNetConvPoolLayer(rng,
                                 input=layer2.output,
                                 filter_shape=layer3_filter_shape,
                                 image_shape=layer3_image_shape,
                                 poolsize=(2, 2),
-                                activation=acti_func
+                                activation=T.tanh
                                 )
 
     layer4 = LeNetConvLayer(rng,
                             input=layer3.output,
                             image_shape=layer4_image_shape,
                             filter_shape=layer4_filter_shape,
-                            activation=acti_func)
+                            activation=T.tanh)
 
     # deepid_input = layer4.output.flatten(2)
 
@@ -112,7 +112,7 @@ def deepID_test(learning_rate=0.11, n_epochs=200, dataset='mnist.pkl.gz', nkerns
                                # n_in  = numpy.prod( result_image_shape[1:] ),
                                # n_output=160,
                                n_output=21,
-                               activation=acti_func)
+                               activation=T.tanh)
     softmax_layer = LogisticRegression(
         input=deepid_layer.output,
         # n_input=160,
@@ -380,7 +380,7 @@ def sgd_optimization_mnist(learning_rate = 0.13, n_epochs = 1000,
 
                     # save the best model
                     with open('best_model.pkl', 'wb') as f:
-                        pickle.dump(classifier, f)
+                        numpy.pickle.dump(classifier, f)
 
             if patience <= iter:
                 done_looping = True
